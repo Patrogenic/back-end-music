@@ -20,32 +20,35 @@ const User = require('./models/user');
 const mongoose = require('mongoose');
 const user = require('./models/user');
  
- mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true , useUnifiedTopology: true})
-   .then(() => {
-     console.log('connected to MongoDB')
-   })
-   .catch((error) => {
-     console.log('error connecting to MongoDB:', error.message)
-   })
- 
- const client_id = config.CLIENT_ID; // Your client id
- const client_secret = config.CLIENT_SECRET; // Your secret
- const redirect_uri = 'http://localhost:8080/callback'; // Your redirect uri
- 
- /**
-  * Generates a random string containing numbers and letters
-  * @param  {number} length The length of the string
-  * @return {string} The generated string
-  */
- var generateRandomString = function(length) {
-   var text = '';
-   var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
- 
-   for (var i = 0; i < length; i++) {
-     text += possible.charAt(Math.floor(Math.random() * possible.length));
-   }
-   return text;
- };
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true , useUnifiedTopology: true})
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
+
+const backEndAPI = "http://localhost:8080/";
+const frontEndURL = "http://127.0.0.1:3000/";
+const prodAPI = "http://34.218.208.196/";
+const client_id = config.CLIENT_ID; // Your client id
+const client_secret = config.CLIENT_SECRET; // Your secret
+const redirect_uri = backEndAPI + 'callback'; // Your redirect uri
+
+/**
+* Generates a random string containing numbers and letters
+* @param  {number} length The length of the string
+* @return {string} The generated string
+*/
+var generateRandomString = function(length) {
+  var text = '';
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (var i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
  
 var stateKey = 'spotify_auth_state';
 
@@ -82,7 +85,7 @@ app.get('/callback', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect('http://127.0.0.1:3000/?' +
+    res.redirect(`${prodAPI}?` +
       querystring.stringify({
         error: 'state_mismatch'
       }));
@@ -133,7 +136,7 @@ app.get('/callback', function(req, res) {
             console.log(user);
           }
 
-          res.redirect('http://127.0.0.1:3000/?' +
+          res.redirect(`${prodAPI}?` +
             querystring.stringify({
               access_token: access_token,
               refresh_token: refresh_token,
@@ -147,7 +150,7 @@ app.get('/callback', function(req, res) {
 
         // we can also pass the token to the browser to make requests from there
       } else {
-        res.redirect('http://127.0.0.1:3000/?' +
+        res.redirect(`${prodAPI}?` +
           querystring.stringify({
             error: 'invalid_token'
           }));
