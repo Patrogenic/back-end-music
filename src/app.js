@@ -28,12 +28,12 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true , useUnifiedTopolog
     console.log('error connecting to MongoDB:', error.message)
   })
 
-const backEndAPI = "http://localhost:8080/api/";
+const devAPI = "http://localhost:8080/api/";
 const frontEndURL = "http://127.0.0.1:3000/";
 const prodAPI = "http://34.218.208.196/api/";
 const client_id = config.CLIENT_ID; // Your client id
 const client_secret = config.CLIENT_SECRET; // Your secret
-const redirect_uri = backEndAPI + 'callback'; // Your redirect uri
+const redirect_uri = devAPI + 'callback'; // Your redirect uri
 
 /**
 * Generates a random string containing numbers and letters
@@ -58,7 +58,7 @@ app.use(express.static(__dirname + '/public'))
   .use(cors())
   .use(cookieParser());
 
-app.get('/login', function(req, res) {
+app.get('/api/login', function(req, res) {
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -75,7 +75,7 @@ app.get('/login', function(req, res) {
     }));
 });
 
-app.get('/callback', function(req, res) {
+app.get('/api/callback', function(req, res) {
 
   // your application requests refresh and access tokens
   // after checking the state parameter
@@ -85,7 +85,7 @@ app.get('/callback', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect(`${prodAPI}?` +
+    res.redirect(`${frontEndURL}?` +
       querystring.stringify({
         error: 'state_mismatch'
       }));
@@ -136,7 +136,7 @@ app.get('/callback', function(req, res) {
             console.log(user);
           }
 
-          res.redirect(`${prodAPI}?` +
+          res.redirect(`${frontEndURL}?` +
             querystring.stringify({
               access_token: access_token,
               refresh_token: refresh_token,
@@ -150,7 +150,7 @@ app.get('/callback', function(req, res) {
 
         // we can also pass the token to the browser to make requests from there
       } else {
-        res.redirect(`${prodAPI}?` +
+        res.redirect(`${frontEndURL}?` +
           querystring.stringify({
             error: 'invalid_token'
           }));
@@ -159,7 +159,7 @@ app.get('/callback', function(req, res) {
   }
 });
 
-app.get('/refresh_token', function(req, res) {
+app.get('/api/refresh_token', function(req, res) {
 
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
@@ -183,7 +183,7 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-app.get('/current_track', async function(req, res){
+app.get('/api/current_track', async function(req, res){
   let token = req.headers['x-access-token'];
 
   if(token){
@@ -202,7 +202,7 @@ app.get('/current_track', async function(req, res){
 
 
 
-app.get('/recently_played', async function(req, res){
+app.get('/api/recently_played', async function(req, res){
   let token = req.headers['x-access-token'];
 
   if(token){
@@ -214,7 +214,7 @@ app.get('/recently_played', async function(req, res){
   }
 });
 
-app.get('/user', async function(req, res){
+app.get('/api/user', async function(req, res){
   //get user from mongodb on load for front end so the user has context
   let access_token = req.headers['x-access-token'];
   let user = await User.find({ access_token });
