@@ -28,9 +28,9 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true , useUnifiedTopolog
     console.log('error connecting to MongoDB:', error.message)
   })
 
-const backEndAPI = "http://localhost:8080/";
+const backEndAPI = "http://localhost:8080/api/";
 const frontEndURL = "http://127.0.0.1:3000/";
-const prodAPI = "http://34.218.208.196/";
+const prodAPI = "http://34.218.208.196/api/";
 const client_id = config.CLIENT_ID; // Your client id
 const client_secret = config.CLIENT_SECRET; // Your secret
 const redirect_uri = backEndAPI + 'callback'; // Your redirect uri
