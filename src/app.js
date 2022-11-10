@@ -30,10 +30,10 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true , useUnifiedTopolog
 
 const devAPI = "http://localhost:8080/api/";
 const frontEndURL = "http://127.0.0.1:3000/";
-const prodAPI = "http://34.218.208.196/api/";
+const prodAPI = "http://34.218.208.196/";
 const client_id = config.CLIENT_ID; // Your client id
 const client_secret = config.CLIENT_SECRET; // Your secret
-const redirect_uri = prodAPI + 'callback'; // Your redirect uri
+const redirect_uri = prodAPI + 'api/' + 'callback'; // Your redirect uri
 
 /**
 * Generates a random string containing numbers and letters
