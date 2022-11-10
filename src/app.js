@@ -33,7 +33,7 @@ const frontEndURL = "http://127.0.0.1:3000/";
 const prodAPI = "http://34.218.208.196/api/";
 const client_id = config.CLIENT_ID; // Your client id
 const client_secret = config.CLIENT_SECRET; // Your secret
-const redirect_uri = devAPI + 'callback'; // Your redirect uri
+const redirect_uri = prodAPI + 'callback'; // Your redirect uri
 
 /**
 * Generates a random string containing numbers and letters
@@ -85,7 +85,7 @@ app.get('/api/callback', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect(`${frontEndURL}?` +
+    res.redirect(`${prodAPI}?` +
       querystring.stringify({
         error: 'state_mismatch'
       }));
@@ -136,7 +136,7 @@ app.get('/api/callback', function(req, res) {
             console.log(user);
           }
 
-          res.redirect(`${frontEndURL}?` +
+          res.redirect(`${prodAPI}?` +
             querystring.stringify({
               access_token: access_token,
               refresh_token: refresh_token,
@@ -150,7 +150,7 @@ app.get('/api/callback', function(req, res) {
 
         // we can also pass the token to the browser to make requests from there
       } else {
-        res.redirect(`${frontEndURL}?` +
+        res.redirect(`${prodAPI}?` +
           querystring.stringify({
             error: 'invalid_token'
           }));
