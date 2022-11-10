@@ -219,7 +219,9 @@ app.get('/api/user', async function(req, res){
   let access_token = req.headers['x-access-token'];
   let user = await User.find({ access_token });
 
-  if(user){
+  console.log(user);
+
+  if(user && user[0]){
     res.json({ user: user[0].email });
   }else{
     res.json({ user: null });
